@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from tempfile import NamedTemporaryFile
+from tempfile import NamedTemporaryFile, TemporaryDirectory
 import pytest
 
 from imeta import ImageMetadata
@@ -23,7 +23,7 @@ def assert_deserialized(data, metadata):
 
 
 def json_file(name):
-    return str(Path(__file__).parents[0] / "json" / f"{name}.json")
+    return str(Path(__file__).parents[0] / "json" / f"{name}")
 
 
 def test_from_dict_success():
@@ -37,7 +37,12 @@ def test_from_str_success():
 
 
 def test_from_file_success():
-    metadata = ImageMetadata.from_file(json_file("valid_v1"))
+    metadata = ImageMetadata.from_file(json_file("valid_v1.json"))
+    assert_deserialized(VALID_METADATA_V1, metadata)
+
+
+def test_from_image_success():
+    metadata = ImageMetadata.from_image(json_file("valid_v1.jpg"))
     assert_deserialized(VALID_METADATA_V1, metadata)
 
 
@@ -60,6 +65,16 @@ def test_to_file_success():
 
     filepath = Path(tofile.name)
     data_str = filepath.read_text()
+    assert data_str == json.dumps(VALID_METADATA_V1)
+
+
+def test_to_image_success():
+    metadata = ImageMetadata(VALID_METADATA_V1)
+    tmpdir = TemporaryDirectory()
+    topath = Path(tmpdir.name)
+    metadata.to_image(str(topath / "test.jpg"))
+
+    data_str = (topath / "test.json").read_text()
     assert data_str == json.dumps(VALID_METADATA_V1)
 
 
@@ -103,3 +118,9 @@ def test_fail_invalid_data():
                 "source_url": False,
             }
         )
+
+
+def test_success_for_image():
+    filename = "test/file.jpg"
+    metaname = ImageMetadata.for_image(filename)
+    assert metaname == "test/file.json"

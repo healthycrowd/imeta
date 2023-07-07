@@ -40,6 +40,16 @@ class ImageMetadata:
         data_str = Path(filename).read_text()
         return cls.from_str(data_str)
 
+    @classmethod
+    def for_image(cls, filename):
+        filepath = Path(filename)
+        metapath = filepath.parents[0] / f"{filepath.stem}.json"
+        return str(metapath)
+
+    @classmethod
+    def from_image(cls, filename):
+        return cls.from_file(cls.for_image(filename))
+
     def __iter__(self):
         data = self._serializer.serialize(self)
         data["$version"] = self._serializer._VERSION
@@ -56,3 +66,6 @@ class ImageMetadata:
     def to_file(self, filename):
         data_str = str(self)
         Path(filename).write_text(data_str)
+
+    def to_image(self, filename):
+        self.to_file(self.for_image(filename))
