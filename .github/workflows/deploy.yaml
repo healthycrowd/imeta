@@ -22,4 +22,4 @@ jobs:
       run: |
         cp -R schema python/imeta
         python -m build --wheel python
-        twine upload dist/*
+        twine upload python/dist/*
