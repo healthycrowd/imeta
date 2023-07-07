@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "imeta"
 description = "Standard for capturing metadata about an image on the web"
 license = { text = "MIT" }
-authors = [{name = "Matt Wisniewski", email = "imeta@mattw.life"}]
+authors = [{name = "Matt Wisniewski", email = "healthycrowd@mattw.life"}]
 keywords = ["imeta", "utility", "image", "metadata"]
 dynamic = ["version"]
 requires-python = ">=3.8.0"
