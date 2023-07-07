@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 from jsonschema.validators import validator_for
 
 from .schema import Schema
@@ -36,8 +37,7 @@ class ImageMetadata:
 
     @classmethod
     def from_file(cls, filename):
-        with open(filename, "r") as fh:
-            data_str = fh.read()
+        data_str = Path(filename).read_text()
         return cls.from_str(data_str)
 
     def __iter__(self):
@@ -55,5 +55,4 @@ class ImageMetadata:
 
     def to_file(self, filename):
         data_str = str(self)
-        with open(filename, "w") as fh:
-            fh.write(data_str)
+        Path(filename).write_text(data_str)

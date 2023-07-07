@@ -1,4 +1,6 @@
 import json
+from pathlib import Path
+from tempfile import NamedTemporaryFile
 import pytest
 
 from imeta import ImageMetadata
@@ -20,6 +22,10 @@ def assert_deserialized(data, metadata):
             assert getattr(metadata, key) == data[key]
 
 
+def json_file(name):
+    return str(Path(__file__).parents[0] / "json" / f"{name}.json")
+
+
 def test_from_dict_success():
     metadata = ImageMetadata(VALID_METADATA_V1)
     assert_deserialized(VALID_METADATA_V1, metadata)
@@ -31,7 +37,8 @@ def test_from_str_success():
 
 
 def test_from_file_success():
-    pass
+    metadata = ImageMetadata.from_file(json_file("valid_v1"))
+    assert_deserialized(VALID_METADATA_V1, metadata)
 
 
 def test_to_dict_success():
@@ -47,7 +54,13 @@ def test_to_str_success():
 
 
 def test_to_file_success():
-    pass
+    metadata = ImageMetadata(VALID_METADATA_V1)
+    tofile = NamedTemporaryFile()
+    metadata.to_file(tofile.name)
+
+    filepath = Path(tofile.name)
+    data_str = filepath.read_text()
+    assert data_str == json.dumps(VALID_METADATA_V1)
 
 
 def test_success_minimal():
