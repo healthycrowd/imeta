@@ -20,7 +20,7 @@ class SchemaMeta(type):
                 schemas[filepath.stem] = json.loads(data)
 
         if not schemas:
-            raise Exception("Unable to locate schema directory")
+            raise Exception("Unable to locate image metadata schemas")
 
         return schemas
 

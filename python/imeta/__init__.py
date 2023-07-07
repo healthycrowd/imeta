@@ -16,10 +16,9 @@ class ImageMetadata:
                 "Image metadata must contain a top-level $version key"
             )
 
+        self._raw_data = data
         self._schema = Schema.get(data["$version"])
         self._serializer = Serializer.get(data["$version"])
-        print(data)
-        print(Serializer._SERIALIZERS)
         if not self._schema or not self._serializer:
             raise ValidationError(
                 f"data['$version'] is not a supported image metadata version"
@@ -39,9 +38,17 @@ class ImageMetadata:
             data_str = fh.read()
         return cls.from_str(data_str)
 
-    def __str__(self):
+    def __iter__(self):
         data = self._serializer.serialize(self)
-        data_str = json.dumps(data)
+        data["$version"] = self._serializer._VERSION
+        data.move_to_end("$version", last=False)
+        for key in self._raw_data.keys():
+            if key not in data:
+                data[key] = self._raw_data[key]
+        return data.items().__iter__()
+
+    def __repr__(self):
+        data_str = json.dumps(dict(self))
         return data_str
 
     def to_file(self, filename):
