@@ -10,7 +10,9 @@
             "enum": [
                 "1.0"
             ],
-            "required": true
+            "type": [
+                "string"
+            ]
         },
         "source_url": {
             "type": [
@@ -51,5 +53,5 @@
             "description": "Additional information about the image that can be used for categorization or analysis."
         }
     },
-    "additionalProperties": true
+    "required": ["$version"]
 }
