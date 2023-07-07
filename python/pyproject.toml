@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "imeta"
 description = "Standard for capturing metadata about an image on the web"
-license = "MIT"
+license = { text = "MIT" }
 authors = [{name = "Matt Wisniewski", email = "imeta@mattw.life"}]
 keywords = ["imeta", "utility", "image", "metadata"]
 dynamic = ["version"]
