@@ -1,5 +1,5 @@
 import json
-from jsonschema import validate
+from jsonschema.validators import validator_for
 
 from .schema import Schema
 from .serializer import Serializer
@@ -24,7 +24,9 @@ class ImageMetadata:
                 f"data['$version'] is not a supported image metadata version"
             )
 
-        validate(instance=data, schema=self._schema)
+        validator = validator_for(self._schema["$schema"])(self._schema)
+        validator.check_schema(self._schema)
+        validator.validate(data)
         self._serializer.deserialize(data, self)
 
     @classmethod
