@@ -31,3 +31,15 @@ class Serializer(metaclass=SerializerMeta):
 class V1Serializer(Serializer):
     _VERSION = "1.0"
     _FIELDS = ["source_url", "source_id", "source_name", "access_date", "tags"]
+
+
+class V1_1Serializer(Serializer):
+    _VERSION = "1.1"
+    _FIELDS = [
+        "extension",
+        "source_url",
+        "source_id",
+        "source_name",
+        "access_date",
+        "tags",
+    ]

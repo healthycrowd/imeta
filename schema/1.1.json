@@ -1,0 +1,64 @@
+{
+    "$id": "https://raw.githubusercontent.com/healthycrowd/imeta/main/schema/1.1.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "imeta",
+    "description": "Describes an image found on the web.",
+    "type": "object",
+    "properties": {
+        "$version": {
+            "enum": [
+                "1.0",
+                "1.1"
+            ],
+            "type": [
+                "string"
+            ],
+            "description": "Version of this schema that should be used for validation."
+        },
+        "extension": {
+            "type": [
+                "string"
+            ],
+            "description": "File extension of the associated image."
+        },
+        "source_url": {
+            "type": [
+                "string",
+                "null"
+            ],
+            "description": "URL where the image was initially found. Preferably a web page where the image was displayed but the URL the image was downloaded from is also acceptable."
+        },
+        "source_id": {
+            "type": [
+                "string",
+                "null"
+            ],
+            "description": "Unique ID of the image on the platform it was downloaded from (such as guid in an RSS feed)."
+        },
+        "source_name": {
+            "type": [
+                "string",
+                "null"
+            ],
+            "description": "Name of a person or organization the image can be attributed to. Ideally the creator of the image but this could also be a publication."
+        },
+        "access_date": {
+            "type": [
+                "integer",
+                "null"
+            ],
+            "description": "Unix timestamp for when the image was downloaded."
+        },
+        "tags": {
+            "type": [
+                "array",
+                "null"
+            ],
+            "items": {
+                "type": "string"
+            },
+            "description": "Additional information about the image that can be used for categorization or analysis."
+        }
+    },
+    "required": ["$version", "extension"]
+}

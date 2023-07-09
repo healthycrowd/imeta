@@ -7,7 +7,7 @@ from .serializer import Serializer
 from .exceptions import ValidationError
 
 
-__version__ = "1.1.1"
+__version__ = "1.2.0"
 
 
 class ImageMetadata:
@@ -48,15 +48,33 @@ class ImageMetadata:
 
     @classmethod
     def from_image(cls, filename):
-        return cls.from_file(cls.for_image(filename))
+        filepath = Path(filename)
+        if not filepath.exists() or not filepath.is_file():
+            raise ValidationError(f"Image filename is not a file: {filename}")
+
+        metadata = cls.from_file(cls.for_image(filename))
+
+        if (
+            metadata._serializer._VERSION != "1.0"
+            and filepath.suffix[1:] != metadata.extension
+        ):
+            raise ValidationError(
+                f"Image filename does not have extension {metadata.extension}: {filename}"
+            )
+
+        return metadata
 
     def __iter__(self):
         data = self._serializer.serialize(self)
         data["$version"] = self._serializer._VERSION
+        if self._serializer._VERSION != "1.0":
+            data.move_to_end("extension", last=False)
         data.move_to_end("$version", last=False)
+
         for key in self._raw_data.keys():
             if key not in data:
                 data[key] = self._raw_data[key]
+
         return data.items().__iter__()
 
     def __repr__(self):
@@ -68,4 +86,10 @@ class ImageMetadata:
         Path(filename).write_bytes(data_str)
 
     def to_image(self, filename):
+        filepath = Path(filename)
+        if self._serializer._VERSION != "1.0" and filepath.suffix[1:] != self.extension:
+            raise ValidationError(
+                f"Image filename does not have extension {self.extension}: {filename}"
+            )
+
         self.to_file(self.for_image(filename))
