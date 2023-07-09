@@ -2,17 +2,17 @@
     "$id": "https://raw.githubusercontent.com/healthycrowd/imeta/main/schema/1.0.json",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "imeta",
-    "description": "Audio rendition resource",
+    "description": "Describes an image found on the web.",
     "type": "object",
     "properties": {
         "$version": {
-            "description": "Version of this schema that should be used for validation.",
             "enum": [
                 "1.0"
             ],
             "type": [
                 "string"
-            ]
+            ],
+            "description": "Version of this schema that should be used for validation."
         },
         "source_url": {
             "type": [
