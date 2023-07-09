@@ -7,7 +7,7 @@ from .serializer import Serializer
 from .exceptions import ValidationError
 
 
-__version__ = "1.1.0"
+__version__ = "1.1.1"
 
 
 class ImageMetadata:
@@ -37,7 +37,7 @@ class ImageMetadata:
 
     @classmethod
     def from_file(cls, filename):
-        data_str = Path(filename).read_text()
+        data_str = Path(filename).read_bytes()
         return cls.from_str(data_str)
 
     @classmethod
@@ -60,12 +60,12 @@ class ImageMetadata:
         return data.items().__iter__()
 
     def __repr__(self):
-        data_str = json.dumps(dict(self))
+        data_str = json.dumps(dict(self), ensure_ascii=False)
         return data_str
 
     def to_file(self, filename):
-        data_str = str(self)
-        Path(filename).write_text(data_str)
+        data_str = str(self).encode()
+        Path(filename).write_bytes(data_str)
 
     def to_image(self, filename):
         self.to_file(self.for_image(filename))

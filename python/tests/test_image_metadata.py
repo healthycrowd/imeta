@@ -124,3 +124,20 @@ def test_success_for_image():
     filename = "test/file.jpg"
     metaname = ImageMetadata.for_image(filename)
     assert metaname == "test/file.json"
+
+
+def test_file_success_unicode():
+    metadata_dict = VALID_METADATA_V1.copy()
+    metadata_dict["source_name"] = "<Imagé *>"
+    metadata = ImageMetadata(metadata_dict)
+    tmpdir = TemporaryDirectory()
+    topath = Path(tmpdir.name)
+    tofile = str(topath / "test.json")
+
+    metadata.to_file(tofile)
+    metadata = ImageMetadata.from_file(tofile)
+
+    actual_metadata = dict(metadata)
+    assert actual_metadata == metadata_dict
+    data_str = Path(tofile).read_bytes()
+    assert metadata_dict["source_name"].encode() in data_str
